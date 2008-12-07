@@ -4,7 +4,7 @@
    * Set SHORTDESCRIPTION = Automatically link to another web(s) if a topic isn't found in the current web.
 -->
 
-This plugin is useful - for example - for a TWiki site that wants to implement a glossary/dictionary web where common terms are defined and stored. Without this plugin:
+This plugin is useful - for example - for a Foswiki site that wants to implement a glossary/dictionary web where common terms are defined and stored. Without this plugin:
 
 	* Each web would need to create their own topic for a common term 
 	* Or need to link to or INCLUDE the topic from where it is defined
@@ -72,7 +72,7 @@ __Compatibility__
 
 ---+++ <nop>%TOPIC% Hints
 
-	* You can en- or disable this plugin for webs, topics or users, using the standard TWiki preferences hierarchy
+	* You can en- or disable this plugin for webs, topics or users, using the standard Foswiki preferences hierarchy
 	* You can avoid single words being looked up by using =!DontLookup= or =&lt;nop/&gt;DontLookup= syntax
 	* "Groups of webs" can use each other as lookup webs, by setting the LOOKELSEWHEREWEBS variable accordingly in their !WebPreferences
 
@@ -84,7 +84,7 @@ You can enable or disable the <nop>%TOPIC% plugin sitewide (in %USERSWEB%.SitePr
 
 ---++++ Scope of the plugin - webs to find topics in
 
-You can list other webs in which to look for topics that don't exist in the current web by defining LOOKELSEWHEREWEBS to be a comma-separated list of webs - for example, =TWiki,Main=
+You can list other webs in which to look for topics that don't exist in the current web by defining LOOKELSEWHEREWEBS to be a comma-separated list of webs - for example, =System,Main=
 
 ---++++ Singular and plural topics
 
