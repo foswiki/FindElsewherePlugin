@@ -1,5 +1,6 @@
 # Copyright (C) 2002 Mike Barton, Marco Carnut, Peter HErnst
 #	(C) 2003 Martin Cleaver, (C) 2004 Matt Wilkie (C) 2007 Crawford Currie
+#   (C) 2008 Foswiki Contributors
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,16 +15,16 @@
 #
 # =========================
 #
-# This is the FindElsewhere TWiki plugin,
-# see http://twiki.org/cgi-bin/view/Plugins/FindElsewherePlugin for details.
+# This is the FindElsewhere Foswiki plugin,
+# see http://foswiki.org/Extensions/FindElsewherePlugin for details.
 
-package TWiki::Plugins::FindElsewherePlugin::Core;
+package Foswiki::Plugins::FindElsewherePlugin::Core;
 
 use strict;
 
 BEGIN {
     # Do a dynamic 'use locale' for this module
-    if( $TWiki::useLocale || $TWiki::cfg{UseLocale}) {
+    if( $Foswiki::useLocale || $Foswiki::cfg{UseLocale}) {
         require locale;
         import locale ();
     }
@@ -39,50 +40,50 @@ $initialised = 0;
 
 sub _debug {
     # Uncomment for debug
-    #TWiki::Func::writeDebug( "FindElsewherePlugin: ".join(' ', @_));
+    #Foswiki::Func::writeDebug( "FindElsewherePlugin: ".join(' ', @_));
 }
 
 sub _lazyInit {
     return 1 if $initialised;
     $initialised = 1;
 
-    my $otherWebs = TWiki::Func::getPreferencesValue( "LOOKELSEWHEREWEBS" );
+    my $otherWebs = Foswiki::Func::getPreferencesValue( "LOOKELSEWHEREWEBS" );
     unless( defined( $otherWebs)) {
         # Compatibility, deprecated
-        $otherWebs = TWiki::Func::getPluginPreferencesValue( "LOOKELSEWHEREWEBS" );
+        $otherWebs = Foswiki::Func::getPluginPreferencesValue( "LOOKELSEWHEREWEBS" );
     }
 
     unless( defined( $otherWebs )) {
         # SMELL: Retained for compatibility, but would be much better
         # off without this, as we could use the absence of webs to mean the
         # plugin is disabled.
-        $otherWebs = "TWiki,Main";
+        $otherWebs = "System,Main";
     }
 
-    $findAcronyms = TWiki::Func::getPreferencesValue( "LOOKELSEWHEREFORACRONYMS" ) || "all";
+    $findAcronyms = Foswiki::Func::getPreferencesValue( "LOOKELSEWHEREFORACRONYMS" ) || "all";
 
     $disablePluralToSingular =
-      TWiki::Func::getPreferencesFlag( "DISABLEPLURALTOSINGULAR" );
+      Foswiki::Func::getPreferencesFlag( "DISABLEPLURALTOSINGULAR" );
     unless( defined( $disablePluralToSingular)) {
         # Compatibility, deprecated
         $disablePluralToSingular =
-          TWiki::Func::getPluginPreferencesFlag( "DISABLEPLURALTOSINGULAR" );
+          Foswiki::Func::getPluginPreferencesFlag( "DISABLEPLURALTOSINGULAR" );
     }
 
     $redirectable =
-      TWiki::Func::getPreferencesFlag( "LOOKELSEWHEREFORLOCAL" );
+      Foswiki::Func::getPreferencesFlag( "LOOKELSEWHEREFORLOCAL" );
 
     @webList = split( /[,\s]+/, $otherWebs );
 
-    $webNameRegex = TWiki::Func::getRegularExpression('webNameRegex');
-    $wikiWordRegex = TWiki::Func::getRegularExpression('wikiWordRegex');
-    $abbrevRegex = TWiki::Func::getRegularExpression('abbrevRegex');
+    $webNameRegex = Foswiki::Func::getRegularExpression('webNameRegex');
+    $wikiWordRegex = Foswiki::Func::getRegularExpression('wikiWordRegex');
+    $abbrevRegex = Foswiki::Func::getRegularExpression('abbrevRegex');
 
-    $noAutolink = TWiki::Func::getPreferencesFlag('NOAUTOLINK');
+    $noAutolink = Foswiki::Func::getPreferencesFlag('NOAUTOLINK');
 
-    my $upperAlphaRegex = TWiki::Func::getRegularExpression('upperAlpha');
-    my $lowerAlphaRegex = TWiki::Func::getRegularExpression('lowerAlpha');
-    my $numericRegex = TWiki::Func::getRegularExpression('numeric');
+    my $upperAlphaRegex = Foswiki::Func::getRegularExpression('upperAlpha');
+    my $lowerAlphaRegex = Foswiki::Func::getRegularExpression('lowerAlpha');
+    my $numericRegex = Foswiki::Func::getRegularExpression('numeric');
     $singleMixedAlphaNumRegex = qr/[$upperAlphaRegex$lowerAlphaRegex$numericRegex]/;
 
     # Plugin correctly initialized
@@ -131,7 +132,7 @@ sub makeTopicLink {
 }
 
 sub findTopicElsewhere {
-    # This was copied and pruned from TWiki::internalLink
+    # This was copied and pruned from Foswiki::internalLink
     my( $theWeb, $theTopic ) = @_;
     my $original = $theTopic;
     my $linkText = $theTopic;
@@ -179,12 +180,12 @@ sub findTopicElsewhere {
     $theTopic =~ s/\[\[($singleMixedAlphaNumRegex)(.*)\]\]/\u$1$2/o;
 
     # Look in the current web, return if found
-    my $exist = TWiki::Func::topicExists( $theWeb, $theTopic );
+    my $exist = Foswiki::Func::topicExists( $theWeb, $theTopic );
 
     if( ! $exist ) {
         if( !$disablePluralToSingular && $theTopic =~ /s$/ ) {
             my $theTopicSingular = makeSingular( $theTopic );
-            if( TWiki::Func::topicExists( $theWeb, $theTopicSingular ) ) {
+            if( Foswiki::Func::topicExists( $theWeb, $theTopicSingular ) ) {
                 _debug("$theTopicSingular was found in $theWeb" );
                 return $original; # leave it as we found it
             }
@@ -208,11 +209,11 @@ sub findTopicElsewhere {
             return "[[$otherWeb.WebHome][$otherWeb]]";
         }
 
-        my $exist = TWiki::Func::topicExists( $otherWeb, $theTopic );
+        my $exist = Foswiki::Func::topicExists( $otherWeb, $theTopic );
         if( ! $exist ) {
             if( !$disablePluralToSingular && $theTopic =~ /s$/ ) {
                 my $theTopicSingular = makeSingular( $theTopic );
-                if( TWiki::Func::topicExists( $otherWeb, $theTopicSingular ) ) {
+                if( Foswiki::Func::topicExists( $otherWeb, $theTopicSingular ) ) {
                     _debug("$theTopicSingular was found in $otherWeb");
                     push(@topicLinks, makeTopicLink($otherWeb, $theTopic));
                 }
@@ -287,8 +288,8 @@ sub takeOutBlocks {
                     $placeholderMarker++;
                     $map->{$placeholder}{text} = $scoop;
                     $map->{$placeholder}{params} = $tagParams;
-                    $out .= '<!--'.$TWiki::TranslationToken.$placeholder.
-                      $TWiki::TranslationToken.'-->';
+                    $out .= '<!--'.$Foswiki::TranslationToken.$placeholder.
+                      $Foswiki::TranslationToken.'-->';
                     $scoop = '';
                     next;
                 }
@@ -307,8 +308,8 @@ sub takeOutBlocks {
 		$placeholderMarker++;
 		$map->{$placeholder}{text} = $scoop;
 		$map->{$placeholder}{params} = $tagParams;
-		$out .= '<!--'.$TWiki::TranslationToken.$placeholder.
-          $TWiki::TranslationToken.'-->';
+		$out .= '<!--'.$Foswiki::TranslationToken.$placeholder.
+          $Foswiki::TranslationToken.'-->';
 	}
 
     return $out;
@@ -325,9 +326,9 @@ sub putBackBlocks {
             my $val = $map->{$placeholder}{text};
             $val = &$callback( $val ) if ( defined( $callback ));
             if ($newtag eq '') {
-            	$$text =~ s(<!--$TWiki::TranslationToken$placeholder$TWiki::TranslationToken-->)($val);
+            	$$text =~ s(<!--$Foswiki::TranslationToken$placeholder$Foswiki::TranslationToken-->)($val);
             } else {
-            	$$text =~ s(<!--$TWiki::TranslationToken$placeholder$TWiki::TranslationToken-->)
+            	$$text =~ s(<!--$Foswiki::TranslationToken$placeholder$Foswiki::TranslationToken-->)
                   (<$newtag$params>$val</$newtag>);
             }
             delete( $map->{$placeholder} );

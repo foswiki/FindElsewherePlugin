@@ -8,10 +8,10 @@ BEGIN {
   }
 }
 
-use TWiki::Contrib::Build;
+use Foswiki::Contrib::Build;
 
 # Create the build object
-$build = new TWiki::Contrib::Build( 'FindElsewherePlugin' );
+$build = new Foswiki::Contrib::Build( 'FindElsewherePlugin' );
 
 # Build the target on the command line, or the default target
 $build->build($build->{target});

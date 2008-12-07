@@ -1,5 +1,6 @@
 # Copyright (C) 2002 Mike Barton, Marco Carnut, Peter HErnst
 #	(C) 2003 Martin Cleaver, (C) 2004 Matt Wilkie (C) 2007 Crawford Currie
+#   (C) 2008 Foswiki Contributors
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,10 +15,10 @@
 #
 # =========================
 #
-# This is the FindElsewhere TWiki plugin,
-# see http://twiki.org/cgi-bin/view/Plugins/FindElsewherePlugin for details.
+# This is the FindElsewhere Foswiki plugin,
+# see http://foswiki.org/Extensions/FindElsewherePlugin for details.
 
-package TWiki::Plugins::FindElsewherePlugin;
+package Foswiki::Plugins::FindElsewherePlugin;
 
 use strict;
 
@@ -34,17 +35,17 @@ sub initPlugin {
     #my( $topic, $web, $user, $installWeb ) = @_;
 
     # check for Plugins.pm versions
-    if( $TWiki::Plugins::VERSION < 1 ) {
-        TWiki::Func::writeWarning( "Version mismatch between FindElsewherePlugin and Plugins.pm" );
+    if( $Foswiki::Plugins::VERSION < 1 ) {
+        Foswiki::Func::writeWarning( "Version mismatch between FindElsewherePlugin and Plugins.pm" );
         return 0;
     }
 
     $disabled =
-      TWiki::Func::getPreferencesFlag( "DISABLELOOKELSEWHERE" );
+      Foswiki::Func::getPreferencesFlag( "DISABLELOOKELSEWHERE" );
     unless( defined( $disabled )) {
         # Compatibility, deprecated
         $disabled =
-          TWiki::Func::getPluginPreferencesFlag( "DISABLELOOKELSEWHERE" );
+          Foswiki::Func::getPluginPreferencesFlag( "DISABLELOOKELSEWHERE" );
     }
 
     return !$disabled;
@@ -55,9 +56,9 @@ sub startRenderingHandler {
     ### my ( $text, $web ) = @_;
     return if $disabled;
 
-    require TWiki::Plugins::FindElsewherePlugin::Core;
+    require Foswiki::Plugins::FindElsewherePlugin::Core;
 
-    return TWiki::Plugins::FindElsewherePlugin::Core::handle(@_);
+    return Foswiki::Plugins::FindElsewherePlugin::Core::handle(@_);
 }
 
 1;
