@@ -114,9 +114,11 @@ Enabled for demo and testing - try it on and off
 
 ---+++ Plugin Info
 
-|  Plugin Author: | TWiki:Main.MikeBarton |
-|  Version: | %$VERSION% |
+|  Plugin Author: | TWiki:Main.MikeBarton, Foswiki:Main.KennethLavrsen |
+|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  Version: | %$VERSION% (16 Dec 2008) |
+|  16 Dec 2008: | Foswiki:Main.KennethLavrsen - rebranded to Foswiki |
 |  19 Dec 2007: | TWiki:Main.SteffenPoulsen - Link none, first or all standalone abbreviations (LOOKELSEWHEREFORACRONYMS option added) |
 |  18 Dec 2007: | TWiki:Main.SteffenPoulsen - Abbrev with alternative linktext found elsewhere again |
 |  25 Sep 2007: | TWiki:Main.CrawfordCurrie - Added redirect support, removed illegal calls, and made more efficient |
@@ -132,7 +134,5 @@ Enabled for demo and testing - try it on and off
 |  25-Sep-2002:	| PeterHErnst - modified webname to show as superscript, - some other changes (chiefly "/o" regex modifiers) (cvs rev1.3) |
 |  15-May-2002:	| Marco Carnut - patch to show webname, e.g. Main.WebHome (cvs rev1.2) |
 |  01 Feb 2002: | Initial version |
-|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Plugin Home: | http://foswiki.org/Extensions/%TOPIC% |
 |  Feedback: | http://foswiki.org/Extensions/%TOPIC%Dev |
-|  Appraisal: | http://foswiki.org/Extensions/%TOPIC%Appraisal |
