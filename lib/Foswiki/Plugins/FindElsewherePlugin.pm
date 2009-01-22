@@ -1,4 +1,4 @@
-# Copyright (C) 2002 Mike Barton, Marco Carnut, Peter HErnst
+# Copyright (C) 2002 Mike Barton, Marco Carnut, Peter Hernst
 #	(C) 2003 Martin Cleaver, (C) 2004 Matt Wilkie (C) 2007 Crawford Currie
 #   (C) 2008 Foswiki Contributors
 #
@@ -28,8 +28,8 @@ use vars qw(
 
 $NO_PREFS_IN_TOPIC = 1;
 
-$RELEASE = '$Date: 2007-09-26 04:16:46 +1000 (Wed, 26 Sep 2007) $';
-$VERSION = '$Rev: 15055 $';
+$VERSION = '$Rev: $Rev$ $';
+$RELEASE = 'Foswiki-1.0.1'
 
 sub initPlugin {
     #my( $topic, $web, $user, $installWeb ) = @_;
@@ -40,12 +40,10 @@ sub initPlugin {
         return 0;
     }
 
-    $disabled =
-      Foswiki::Func::getPreferencesFlag( "DISABLELOOKELSEWHERE" );
+    $disabled = Foswiki::Func::getPreferencesFlag( "DISABLELOOKELSEWHERE" );
     unless( defined( $disabled )) {
         # Compatibility, deprecated
-        $disabled =
-          Foswiki::Func::getPluginPreferencesFlag( "DISABLELOOKELSEWHERE" );
+        $disabled = Foswiki::Func::getPluginPreferencesFlag( "DISABLELOOKELSEWHERE" );
     }
 
     return !$disabled;

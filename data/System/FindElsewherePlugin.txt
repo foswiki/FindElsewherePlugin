@@ -80,7 +80,7 @@ __Compatibility__
 
 ---++++ Enabling and disabling the plugin globally
 
-You can enable or disable the <nop>%TOPIC% plugin sitewide (in %USERSWEB%.SitePreferences), per web (in <nop/>WebPreferences) or pr. topic by defining DISABLELOOKELSEWHERE = 1.
+You can enable or disable the <nop>%TOPIC% plugin sitewide (in %USERSWEB%.SitePreferences), per web (in <nop/>WebPreferences) or per topic by defining DISABLELOOKELSEWHERE = 1.
 
 ---++++ Scope of the plugin - webs to find topics in
 
