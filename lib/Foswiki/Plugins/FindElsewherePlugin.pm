@@ -29,7 +29,7 @@ use vars qw(
 $NO_PREFS_IN_TOPIC = 1;
 
 $VERSION = '$Rev: $Rev$ $';
-$RELEASE = 'Foswiki-1.0.1'
+$RELEASE = 'Foswiki-1.0.1';
 
 sub initPlugin {
     #my( $topic, $web, $user, $installWeb ) = @_;
