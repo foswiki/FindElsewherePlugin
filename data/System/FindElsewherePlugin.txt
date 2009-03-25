@@ -49,7 +49,7 @@ Create this table in [[Sandbox.FindElsewherePluginTest]] to try it out (use raw 
 
 <verbatim>
 | *Test case* | *Input* | *Output<br />(if installed)* | *Expected* |
-| Found elsewhere, spaced wiki word | [<nop>[Default Preferences]] | [[Default Preferences]] | _Default preferences_ <sup>([[%SYSTEMWEB%.DefaultPreferences][%SYSTEMWEB%]],[[%USERSWEB%.SitePreferences][%USERSWEB%]])</sup> |
+| Found elsewhere, spaced wiki word | [<nop>[Default Preferences]] | [[Default Preferences]] | %SYSTEMWEB%.DefaultPreferences |
 | Found elsewhere | <nop>ProjectContributor | ProjectContributor | <nop>ProjectContributor<sup>([[%SYSTEMWEB%.ProjectContributor][%SYSTEMWEB%]],[[%MAINWEB%.ProjectContributor][%MAINWEB%]])</sup> |
 </verbatim>
 
@@ -117,8 +117,9 @@ Enabled for demo and testing - try it on and off
 |  Plugin Author: | TWiki:Main.MikeBarton, Foswiki:Main.KennethLavrsen |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
-|  Version: | %$VERSION% (16 Dec 2008) |
-|  16 Dec 2008: | Foswiki:Main.KennethLavrsen - rebranded to Foswiki |
+|  Version: | 2.0.1 (25 Mar 2009) |
+|  25 Mar 2009: | (v2.0.1) Foswiki:Main.KennethLavrsen - Plugin fixed so it does not remove square bracket links to non-existing topics. Example in plugin topic fixed |
+|  16 Dec 2008: | (v2.0.0) Foswiki:Main.KennethLavrsen - rebranded to Foswiki |
 |  19 Dec 2007: | TWiki:Main.SteffenPoulsen - Link none, first or all standalone abbreviations (LOOKELSEWHEREFORACRONYMS option added) |
 |  18 Dec 2007: | TWiki:Main.SteffenPoulsen - Abbrev with alternative linktext found elsewhere again |
 |  25 Sep 2007: | TWiki:Main.CrawfordCurrie - Added redirect support, removed illegal calls, and made more efficient |

@@ -248,7 +248,7 @@ sub findTopicElsewhere {
             return $renderedLink;
         }
     }
-    return $linkText;
+    return $original;
 }
 
 sub makeSingular  {
