@@ -36,8 +36,6 @@ __Single hits__
 | Found elsewhere, abbrev w. alt. linktext | =[<nop/>[ACRONYM][acronym link text]]= | [[ACRONYM][acronym link text]] | (If <nop/>ACRONYM is a topic defined in one of the LOOKELSEWHERE webs, a link to it should show up) |
 | Escaped with &lt;noautolink> | =&lt;noautolink> <nop>WebSearch &lt;/noautolink>= | <noautolink> WebSearch </noautolink> | <nop>WebSearch  |
 
-(Note: <nop>%TOPIC% doesn't support =&lt;noautolink>= in TWiki-3; <nop>WebSearch will be found anyway if you're still using this codebase) |
-
 __Multiple hits__
 
 If a word is found in two or more LOOKELSEWHERE webs, a special syntax is used:
