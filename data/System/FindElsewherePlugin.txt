@@ -1,22 +1,22 @@
----++ Find Elsewhere Plugin
-%SHORTDESCRIPTION%
+---+!! Find Elsewhere Plugin
 <!--
-   * Set SHORTDESCRIPTION = Automatically link to another web(s) if a topic isn't found in the current web.
+   * Set SHORTDESCRIPTION = %$SHORTDESCRIPTION%
 -->
+%SHORTDESCRIPTION%
 
-This plugin is useful - for example - for a Foswiki site that wants to implement a glossary/dictionary web where common terms are defined and stored. Without this plugin:
+This plugin is useful - for example - for a Foswiki site that wants to implement a glossary/dictionary web where common terms are defined and stored together. Without this plugin:
 
-	* Each web would need to create their own topic for a common term 
-	* Or need to link to or INCLUDE the topic from where it is defined
-	* Authors would need to remember to put the Web name in front of the topic name, such as [[%SYSTEMWEB%.WikiWord]]
+	* Each web would have to create their own topic for a common term 
+	* *Or* would have to link to or INCLUDE the topic from where it is defined
+	* *Or* authors would have to remember to put the Web name in front of the topic name, such as [[%SYSTEMWEB%.WikiWord]]
 
-Without this kind of plugin, it's likely that common terms or acronyms (abbreviations) used within an organization would be defined in multiple webs or the common terms will be unlinked wiki words (as if they didn't exist).
+%TOC%
 
----+++ Syntax Rules
+---++ Syntax Rules
 
 No new syntax is introduced.  However, new automatic %SYSTEMWEB%.WikiWord linking will occur.  
 
-If a topic or abbreviation is not found in the current web, this plugin will look through the webs listed in the LOOKELSEWHEREWEBS variable.  If the topic is found (as it looks through the webs in their listed order), it will create one or more links, depending on the number of topics found.
+If a topic or abbreviation is not found in the current web, this plugin will look through the webs listed in the =LOOKELSEWHEREWEBS= preference.  If the topic is found (as it looks through the webs in their listed order), it will create one or more links, depending on the number of topics found.
 
 #NewFunctionalityTest
 
@@ -68,33 +68,27 @@ __Compatibility__
 | <nop>%SYSTEMWEB%.WikiWords		 | %SYSTEMWEB%.WikiWords  |
 | [<nop/>[%MAINWEB%.WebSearch][This is a link to <nop/>WebSearch in <nop/>%MAINWEB%]] | [[%MAINWEB%.WebSearch][This is a link to WebSearch in %MAINWEB%]] |
 
----+++ <nop>%TOPIC% Hints
+---++ <nop>%TOPIC% Settings
 
-	* You can en- or disable this plugin for webs, topics or users, using the standard Foswiki preferences hierarchy
-	* You can avoid single words being looked up by using =!DontLookup= or =&lt;nop/&gt;DontLookup= syntax
-	* "Groups of webs" can use each other as lookup webs, by setting the LOOKELSEWHEREWEBS variable accordingly in their !WebPreferences
-
----+++ <nop>%TOPIC% Settings
-
----++++ Enabling and disabling the plugin globally
+---+++ Enabling and disabling the plugin globally
 
 You can enable or disable the <nop>%TOPIC% plugin sitewide (in %USERSWEB%.SitePreferences), per web (in <nop/>WebPreferences) or per topic by defining DISABLELOOKELSEWHERE = 1.
 
----++++ Scope of the plugin - webs to find topics in
+---+++ Where it looks to find topics
 
 You can list other webs in which to look for topics that don't exist in the current web by defining LOOKELSEWHEREWEBS to be a comma-separated list of webs - for example, =System,Main=
 
----++++ Singular and plural topics
+---+++ Singular and plural topics
 
-If the %SYSTEMWEB%.WikiWord is plural but doesn't exist, %TOPIC% also looks for the singular word in other webs. You can disable this behaviour by setting DISABLEPLURALTOSINGULAR = 1. (Note this setting is for looking in *other* webs only (plural to singular is still automatically done in the current web, dependent on the setting in =configure=).
+If the %SYSTEMWEB%.WikiWord is plural but doesn't exist, %TOPIC% also looks for the singular word in other webs. You can disable this behaviour by setting =DISABLEPLURALTOSINGULAR = 1=. (Note this setting is for looking in *other* webs only (plural to singular is still automatically done in the current web, dependent on the setting in =configure=).
 
----++++ <nop>ACRONYM link settings
+---+++ <nop>ACRONYM link preference
 
-A setting called "LOOKELSEWHEREFORACRONYMS" can be set to a value of =none=, =first= or =all= (=all= is default). 
+The =LOOKELSEWHEREFORACRONYMS= preference can be set to a value of =none=, =first= or =all= (=all= is default). 
 
 =none= means that non-forced acronyms in topics are never found elsewhere, =first= that they are linked only at the first occurence and =all= that every occurence is linked. Especially topics with many occurences of the same acronym will experience improved readability by use of the =first= setting.
 
----++++ Overriding forced local links
+---+++ Overriding forced local links
 
 Even if a link refers explicitly to the current web and a topic name (for
 example, [<nop>[Thatweb.ThatTopic]], you can still trigger
@@ -107,31 +101,39 @@ Enabled for demo and testing - try it on and off
 
    * Set LOOKELSEWHEREFORLOCAL = 1
 
----+++ Plugin Installation Instructions
+---++ <nop>%TOPIC% Hints
+
+	* You can en- or disable this plugin for webs, topics or users, using the standard Foswiki preferences hierarchy
+	* You can avoid single words being looked up by using =!DontLookup= or =&lt;nop/&gt;DontLookup= syntax
+	* "Groups of webs" can use each other as lookup webs, by setting the =LOOKELSEWHEREWEBS= preference accordingly in their !WebPreferences
+
+
+---++ Installation Instructions
 %$INSTALL_INSTRUCTIONS%
 
----+++ Plugin Info
+---++ Info
 
-|  Plugin Author: | TWiki:Main.MikeBarton, Foswiki:Main.KennethLavrsen |
+|  Author: | Mike Barton |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
-|  Version: | 2.0.1 (25 Mar 2009) |
-|  25 Mar 2009: | (v2.0.1) Foswiki:Main.KennethLavrsen - Plugin fixed so it does not remove square bracket links to non-existing topics. Example in plugin topic fixed |
+|  Version: | %$VERSION% |
+|  10 Jun 2010: | (v2.1) Foswiki:Main.CrawfordCurrie - major tidy-up, including removal of NOAUTOLINK no-op |
+|  25 Mar 2009: | (v2.0.1) Foswiki:Main.KennethLavrsen - fixed so it does not remove square bracket links to non-existing topics. Example in plugin topic fixed |
 |  16 Dec 2008: | (v2.0.0) Foswiki:Main.KennethLavrsen - rebranded to Foswiki |
-|  19 Dec 2007: | TWiki:Main.SteffenPoulsen - Link none, first or all standalone abbreviations (LOOKELSEWHEREFORACRONYMS option added) |
-|  18 Dec 2007: | TWiki:Main.SteffenPoulsen - Abbrev with alternative linktext found elsewhere again |
-|  25 Sep 2007: | TWiki:Main.CrawfordCurrie - Added redirect support, removed illegal calls, and made more efficient |
-|  20-Apr-2006: | (v1.9) - Now repects &lt;noautolink&gt; ... &lt;/noautolink&gt; blocks (Dakar only) and a new NOAUTOLINK preference flag - TWiki:Main.MichaelDaum |
-|  07-Apr-2006: | (v1.8) - Replaced direct usage of %regex with TWiki::Func::getRegularExpression(), replaced some implicit scalar references with explicit $ notation - TWiki:Main.ScottHunter |
-|  08 Apr 2005: | (v1.7) - Negated vars =DISABLELOOKELSEWHERE= and =DISABLEPLURALTOSINGULAR= can now be set per web (!WebPreferences) or per topic. - TWiki:Main.SteffenPoulsen |
-|  05 Apr 2005: | (v1.6) - Bugfix: Preambles for ACRONYMS were doubled. - TWiki:Main.SteffenPoulsen |
-|  04 Apr 2005: | (v1.5) - Plugin less greedy - now leaves linktext in [<nop/>[WikiWord][long links with <nop/>ACRONYMS or <nop/>WikiWords]] alone - TWiki:Main.SteffenPoulsen |
-|  03 Apr 2005: | (v1.4) - Documentation update. - TWiki:Main.SteffenPoulsen |
-|  02 Apr 2005: | (v1.3) - I18N-support added. New link style. TWiki:Codev.WebNameAsWikiName supported - TWiki:Main.SteffenPoulsen |
-|  12-Feb-2004: |	Matt Wilkie - put all of above into twikiplugins cvs, - removed "/o"'s as there may be issues with modperl (Codev.ModPerl) |
-|  25-May-2003:	| Martin Cleaver - patch to add Codev.WebNameAsWikiName (cvs rev1.4) |
-|  25-Sep-2002:	| PeterHErnst - modified webname to show as superscript, - some other changes (chiefly "/o" regex modifiers) (cvs rev1.3) |
-|  15-May-2002:	| Marco Carnut - patch to show webname, e.g. Main.WebHome (cvs rev1.2) |
+|  19 Dec 2007: | Steffen Poulsen - Link none, first or all standalone abbreviations (LOOKELSEWHEREFORACRONYMS option added) |
+|  18 Dec 2007: | Steffen Poulsen - Abbrev with alternative linktext found elsewhere again |
+|  25 Sep 2007: | Crawford Currie - Added redirect support, removed illegal calls, and made more efficient |
+|  20-Apr-2006: | (v1.9) - Now respects &lt;noautolink&gt; ... &lt;/noautolink&gt; blocks and a new NOAUTOLINK preference flag - Michael Daum |
+|  07-Apr-2006: | (v1.8) - Replaced direct usage of %regex with :Func::getRegularExpression(), replaced some implicit scalar references with explicit $ notation - Scott Hunter |
+|  08 Apr 2005: | (v1.7) - Negated vars =DISABLELOOKELSEWHERE= and =DISABLEPLURALTOSINGULAR= can now be set per web (!WebPreferences) or per topic. - Steffen Poulsen |
+|  05 Apr 2005: | (v1.6) - Bugfix: Preambles for ACRONYMS were doubled. - Steffen Poulsen |
+|  04 Apr 2005: | (v1.5) - Plugin less greedy - now leaves linktext in [<nop/>[WikiWord][long links with <nop/>ACRONYMS or <nop/>WikiWords]] alone - Steffen Poulsen |
+|  03 Apr 2005: | (v1.4) - Documentation update. - Steffen Poulsen |
+|  02 Apr 2005: | (v1.3) - I18N-support added. New link style. Codev.WebNameAsWikiName supported - Steffen Poulsen |
+|  12-Feb-2004: |	Matt Wilkie - put all of above into twikiplugins cvs, - removed "/o"'s as there may be issues with modperl  |
+|  25-May-2003:	| Martin Cleaver - patch to add !WebNameAsWikiName |
+|  25-Sep-2002:	| PeterHErnst - modified webname to show as superscript, - some other changes (chiefly "/o" regex modifiers) |
+|  15-May-2002:	| Marco Carnut - patch to show webname, e.g. Main.<nop>WebHome |
 |  01 Feb 2002: | Initial version |
-|  Plugin Home: | http://foswiki.org/Extensions/%TOPIC% |
+|  Home: | http://foswiki.org/Extensions/%TOPIC% |
 |  Support: | http://foswiki.org/Support/%TOPIC% |

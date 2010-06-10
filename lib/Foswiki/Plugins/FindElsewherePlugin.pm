@@ -1,62 +1,50 @@
-# Copyright (C) 2002 Mike Barton, Marco Carnut, Peter Hernst
-#	(C) 2003 Martin Cleaver, (C) 2004 Matt Wilkie (C) 2007 Crawford Currie
-#   (C) 2008 Foswiki Contributors
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details, published at 
-# http://www.gnu.org/copyleft/gpl.html
-#
-# =========================
-#
+# See bottom of file for license and copyright details
 # This is the FindElsewhere Foswiki plugin,
 # see http://foswiki.org/Extensions/FindElsewherePlugin for details.
-
 package Foswiki::Plugins::FindElsewherePlugin;
 
 use strict;
 
-use vars qw(
-            $VERSION $RELEASE $NO_PREFS_IN_TOPIC $disabled
-           );
-
-$NO_PREFS_IN_TOPIC = 1;
-
-$VERSION = '$Rev: 1952 $';
-$RELEASE = '2.0.1 (25 Mar 2009)';
+our $NO_PREFS_IN_TOPIC = 1;
+our $VERSION = '$Rev: 1952 $';
+our $RELEASE = '2.1';
+our $SHORTDESCRIPTION = "Automatically link to another web(s) if a topic isn't found in the current web.";
 
 sub initPlugin {
     #my( $topic, $web, $user, $installWeb ) = @_;
 
-    # check for Plugins.pm versions
-    if( $Foswiki::Plugins::VERSION < 1 ) {
-        Foswiki::Func::writeWarning( "Version mismatch between FindElsewherePlugin and Plugins.pm" );
-        return 0;
-    }
-
-    $disabled = Foswiki::Func::getPreferencesFlag( "DISABLELOOKELSEWHERE" );
+    my $disabled = Foswiki::Func::getPreferencesFlag( "DISABLELOOKELSEWHERE" );
     unless( defined( $disabled )) {
         # Compatibility, deprecated
-        $disabled = Foswiki::Func::getPluginPreferencesFlag( "DISABLELOOKELSEWHERE" );
+        $disabled = Foswiki::Func::getPluginPreferencesFlag(
+            "DISABLELOOKELSEWHERE" );
     }
-
-    return !$disabled;
-}
-
-sub startRenderingHandler {
-    # This handler is called by getRenderedVersion just before the line loop
-    ### my ( $text, $web ) = @_;
-    return if $disabled;
+    return 0 if $disabled;
 
     require Foswiki::Plugins::FindElsewherePlugin::Core;
+    # Alias the handler to the one in the core package
+    *Foswiki::Plugins::FindElsewherePlugin::startRenderingHandler =
+      \&Foswiki::Plugins::FindElsewherePlugin::Core::startRenderingHandler;
 
-    return Foswiki::Plugins::FindElsewherePlugin::Core::handle(@_);
+    return 1;
 }
 
 1;
+__END__
+Copyright (C) 2002 Mike Barton, Marco Carnut, Peter HErnst
+Copyright (C) 2003 Martin Cleaver
+Copyright (C) 2004 Matt Wilkie
+Copyright (C) 2007 Crawford Currie http://c-dot.co.uk
+Copyright (C) 2008-2010 Foswiki Contributors
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, published at 
+http://www.gnu.org/copyleft/gpl.html
+
