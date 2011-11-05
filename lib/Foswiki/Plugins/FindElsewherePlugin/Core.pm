@@ -28,6 +28,8 @@ sub _lazyInit {
         $otherWebs = Foswiki::Func::getPluginPreferencesValue(
             "LOOKELSEWHEREWEBS" );
     }
+    # Item10460: Expand variables like %USERSWEB%
+    $otherWebs = Foswiki::Func::expandCommonVariables( $otherWebs );
 
     unless( defined( $otherWebs )) {
         # SMELL: Retained for compatibility, but would be much better
