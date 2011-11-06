@@ -21,6 +21,8 @@ our $redirectable;
 our @webList;
 our $singleMixedAlphaNumRegex;
 
+my $EMESC = "\1";
+
 sub _lazyInit {
     my $otherWebs = Foswiki::Func::getPreferencesValue( "LOOKELSEWHEREWEBS" );
     unless( defined( $otherWebs)) {
@@ -81,6 +83,9 @@ sub startRenderingHandler {
     my $removed = {};
     my $text = _takeOutBlocks( $_[0], 'noautolink', $removed );
 
+    $text =~ s/(?<=[\s\(])
+        ($Foswiki::regex{emailAddrRegex})/<${EMESC}nop>$1/gox;
+
     # Match 
     # 0) (Allowed preambles: "\s" and "(")
     # 1) [[something]] - (including [[something][something]], but non-greedy),
@@ -94,6 +99,8 @@ sub startRenderingHandler {
                        (?:$Foswiki::regex{wikiWordRegex}
                        | $Foswiki::regex{abbrevRegex}))/
                          _findTopicElsewhere($_[1], $1, \%linkedWords)/gexo );
+
+    $text =~ s/<${EMESC}nop>//go;
 
     if ($count) {
         _putBackBlocks( \$text, $removed, 'noautolink' );

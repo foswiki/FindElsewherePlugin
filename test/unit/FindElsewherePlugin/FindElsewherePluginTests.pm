@@ -57,7 +57,7 @@ sub set_up {
 
     $Foswiki::cfg{LocalSitePreferences} = "$this->{users_web}.SitePreferences";
 
-    Foswiki::Func::saveTopic( $this->{users_web}, 'ProjectContributor', undef, "Some text" ); 
+    Foswiki::Func::saveTopic( $this->{users_web}, 'ProjectContributor', undef, "Some text" );
 
     Foswiki::Func::setPreferencesValue( 'CONTROLWIKIWORDPLUGIN_DEBUG', '1' );
 }
@@ -86,7 +86,7 @@ sub doTest {
 
 =pod
 
----++ Multiple web linking  
+---++ Multiple web linking
 
 =cut
 
@@ -114,7 +114,7 @@ END_EXPECTED
 
 =pod
 
----++ Multiple web linking with macro webnames 
+---++ Multiple web linking with macro webnames
 
 =cut
 
@@ -140,6 +140,35 @@ END_EXPECTED
     $this->doTest( $source, $expected, 0 );
 
 }
+
+=pod
+
+---++ Email address with WikiWord on left
+
+=cut
+
+# ########################################################
+# Item11199: WikiWords linked incorrectly in email addresses
+# ########################################################
+sub test_WikiWordAsEmailAddress {
+    my $this = shift;
+
+    Foswiki::Func::setPreferencesValue(
+        'LOOKELSEWHEREWEBS', '%USERSWEB%, %SYSTEMWEB%' );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+
+    $source = <<'END_SOURCE';
+Test ProjectContributor@example.com Word
+END_SOURCE
+
+    $expected = <<'END_EXPECTED';
+Test ProjectContributor@example.com Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+}
+
 
 
 # ####################
