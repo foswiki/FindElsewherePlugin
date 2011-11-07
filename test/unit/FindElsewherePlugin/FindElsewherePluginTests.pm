@@ -19,11 +19,6 @@ my $source;
 
 #my $foswiki;
 
-sub new {
-    my $self = shift()->SUPER::new( 'ControlWikWordPluginFunctions', @_ );
-    return $self;
-}
-
 sub setLocalSite {
     $Foswiki::cfg{Plugins}{FindElsewherePlugin}{Enabled} = 1;
     $Foswiki::cfg{Plugins}{FindElsewherePlugin}{Module} =
@@ -58,8 +53,7 @@ sub set_up {
     $Foswiki::cfg{LocalSitePreferences} = "$this->{users_web}.SitePreferences";
 
     Foswiki::Func::saveTopic( $this->{users_web}, 'ProjectContributor', undef, "Some text" );
-
-    Foswiki::Func::setPreferencesValue( 'CONTROLWIKIWORDPLUGIN_DEBUG', '1' );
+    Foswiki::Func::saveTopic( $this->{users_web}, 'SomeMissingTopic', undef, "Some text" );
 }
 
 sub doTest {
@@ -68,8 +62,9 @@ sub doTest {
     _trimSpaces($source);
     _trimSpaces($expected);
 
-    #print " SOURCE = $source  EXPECTED = $expected \n";
+    #print " SOURCE   = $source\n EXPECTED = $expected \n";
 
+    $source = Foswiki::Func::expandCommonVariables($source);
     Foswiki::Plugins::FindElsewherePlugin::initPlugin( "TestTopic",
         $this->{test_web}, "MyUser", "System" );
     Foswiki::Plugins::FindElsewherePlugin::startRenderingHandler( $source,
@@ -109,6 +104,42 @@ Test <nop/>ProjectContributor<sup>([[$this->{users_web}.ProjectContributor][$thi
 END_EXPECTED
 
     $this->doTest( $source, $expected, 0 );
+
+}
+
+=pod
+
+---++ Look Elsewhere for Local
+
+=cut
+
+# ########################################################
+# Verify that an explicit local topic is found in a remote
+# location if locally missing.
+# ########################################################
+sub test_LookElsewhereForLocal {
+    my $this = shift;
+
+    Foswiki::Func::setPreferencesValue(
+        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREFORLOCAL', '1' );
+
+    $source = <<"END_SOURCE";
+Test $this->{test_web}.SomeMissingTopic Word
+Test [[$this->{test_web}.SomeMissingTopic][Link text]] Word
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+Test [[$this->{users_web}.SomeMissingTopic][SomeMissingTopic]] Word
+Test [[$this->{users_web}.SomeMissingTopic][Link text]] Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREFORLOCAL', '0' );
+
+    $this->doTest( $source, $expected, 1 );
 
 }
 
@@ -163,6 +194,56 @@ END_SOURCE
 
     $expected = <<'END_EXPECTED';
 Test ProjectContributor@example.com Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+}
+
+=pod
+
+---++ Look elsewhere for acronyms
+
+=cut
+
+# ########################################################
+# Verify that an acronym is handled per first, all, none setting
+# ########################################################
+sub test_LookElsewhereForAcronyms {
+    my $this = shift;
+
+    Foswiki::Func::setPreferencesValue(
+        'LOOKELSEWHEREWEBS', '%USERSWEB%, %SYSTEMWEB%' );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+
+    $source = <<END_SOURCE;
+Test ACRONYM Word
+And another ACRONYM here
+END_SOURCE
+
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREFORACRONYMS', 'none' );
+
+    $expected = <<"END_EXPECTED";
+Test ACRONYM Word
+And another ACRONYM here
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREFORACRONYMS', 'first' );
+
+    $expected = <<"END_EXPECTED";
+Test [[System.ACRONYM][ACRONYM]] Word
+And another ACRONYM here
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREFORACRONYMS', 'all' );
+
+    $expected = <<"END_EXPECTED";
+Test [[System.ACRONYM][ACRONYM]] Word
+And another [[System.ACRONYM][ACRONYM]] here
 END_EXPECTED
 
     $this->doTest( $source, $expected, 0 );

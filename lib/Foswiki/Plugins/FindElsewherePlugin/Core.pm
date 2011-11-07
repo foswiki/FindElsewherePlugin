@@ -2,6 +2,7 @@
 package Foswiki::Plugins::FindElsewherePlugin::Core;
 
 use strict;
+use warnings;
 
 BEGIN {
     # Do a dynamic 'use locale' for this module
@@ -14,24 +15,22 @@ BEGIN {
 # Set to 1 to get debug messages written to the warnings log
 use constant TRACE => 0;
 
-our $initialised = 0;
-our $findAcronyms;
-our $disablePluralToSingular;
-our $redirectable;
-our @webList;
-our $singleMixedAlphaNumRegex;
+my $findAcronyms;
+my $disablePluralToSingular;
+my $redirectable;
+my @webList;
+my $singleMixedAlphaNumRegex;
 
 my $EMESC = "\1";
 
-sub _lazyInit {
+sub initPlugin {
+
     my $otherWebs = Foswiki::Func::getPreferencesValue( "LOOKELSEWHEREWEBS" );
     unless( defined( $otherWebs)) {
         # Compatibility, deprecated
         $otherWebs = Foswiki::Func::getPluginPreferencesValue(
             "LOOKELSEWHEREWEBS" );
     }
-    # Item10460: Expand variables like %USERSWEB%
-    $otherWebs = Foswiki::Func::expandCommonVariables( $otherWebs );
 
     unless( defined( $otherWebs )) {
         # SMELL: Retained for compatibility, but would be much better
@@ -39,6 +38,9 @@ sub _lazyInit {
         # plugin is disabled.
         $otherWebs = "$Foswiki::cfg{SystemWebName},$Foswiki::cfg{UsersWebName}";
     }
+
+    # Item10460: Expand variables like %USERSWEB%
+    $otherWebs = Foswiki::Func::expandCommonVariables( $otherWebs );
 
     $findAcronyms = Foswiki::Func::getPreferencesValue(
         "LOOKELSEWHEREFORACRONYMS" ) || "all";
@@ -54,6 +56,7 @@ sub _lazyInit {
     $redirectable =
       Foswiki::Func::getPreferencesFlag( "LOOKELSEWHEREFORLOCAL" );
 
+    @webList = ();
     foreach my $otherWeb ( split( /[,\s]+/, $otherWebs ) ) {
         $otherWeb = Foswiki::Sandbox::untaint(
             $otherWeb,
@@ -63,11 +66,9 @@ sub _lazyInit {
 
     $singleMixedAlphaNumRegex = qr/[$Foswiki::regex{mixedAlphaNum}]/;
 
-    $initialised = 1;
 }
 
 sub startRenderingHandler {
-    _lazyInit() unless $initialised;
 
     unless (scalar(@webList)) {
         # no point if there are no webs to search
@@ -84,7 +85,7 @@ sub startRenderingHandler {
     my $text = _takeOutBlocks( $_[0], 'noautolink', $removed );
 
     $text =~ s/(?<=[\s\(])
-        ($Foswiki::regex{emailAddrRegex})/<${EMESC}nop>$1/gox;
+        ($Foswiki::regex{emailAddrRegex})/${EMESC}<nop>$1/gox;
 
     # Match 
     # 0) (Allowed preambles: "\s" and "(")
@@ -100,7 +101,7 @@ sub startRenderingHandler {
                        | $Foswiki::regex{abbrevRegex}))/
                          _findTopicElsewhere($_[1], $1, \%linkedWords)/gexo );
 
-    $text =~ s/<${EMESC}nop>//go;
+    $text =~ s/${EMESC}<nop>//go;
 
     if ($count) {
         _putBackBlocks( \$text, $removed, 'noautolink' );
@@ -120,12 +121,15 @@ sub _findTopicElsewhere {
     my $linkText = $topic;
     my $nonForcedAcronym = 0;
 
+    Foswiki::Func::writeDebug( "FindElsewherePlugin: Called $web, $topic Redirectable = $redirectable") if TRACE;
+
     if ($topic =~ /^\[\[($Foswiki::regex{webNameRegex})\.
                       ($Foswiki::regex{wikiWordRegex})\](?:\[(.*)\])?\]$/ox) {
         if ($redirectable && $1 eq $web) {
             # The topic is *supposed* to be in this web, but the web is
             # redirectable so we can ignore the web specifier
             # remove the web name and continue
+            Foswiki::Func::writeDebug( "FindElsewherePlugin: $topic $1 is redirectable" ) if TRACE;
             $topic = $2;
             $linkText = $3 || $topic;
         } else {

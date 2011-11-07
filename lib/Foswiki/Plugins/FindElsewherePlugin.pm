@@ -4,6 +4,7 @@
 package Foswiki::Plugins::FindElsewherePlugin;
 
 use strict;
+use warnings;
 
 our $NO_PREFS_IN_TOPIC = 1;
 our $VERSION = '$Rev: 1952 $';
@@ -22,6 +23,7 @@ sub initPlugin {
     return 0 if $disabled;
 
     require Foswiki::Plugins::FindElsewherePlugin::Core;
+    Foswiki::Plugins::FindElsewherePlugin::Core::initPlugin();
     # Alias the handler to the one in the core package
     *Foswiki::Plugins::FindElsewherePlugin::startRenderingHandler =
       \&Foswiki::Plugins::FindElsewherePlugin::Core::startRenderingHandler;
