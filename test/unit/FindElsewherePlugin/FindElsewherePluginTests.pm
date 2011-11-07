@@ -169,6 +169,36 @@ END_EXPECTED
 
 =pod
 
+---++ Test not-found links
+
+=cut
+
+# ########################################################
+# Verify that a missing topic doesn't loose it's [[]] notation
+# ########################################################
+sub test_NotFoundWikiWords {
+    my $this = shift;
+
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+
+    $source = <<END_SOURCE;
+Test [[AnotherMissingOne]] Word
+Test OneMoreMissing Word
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+Test [[AnotherMissingOne]] Word
+Test OneMoreMissing Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+}
+
+=pod
+
 ---++ Multiple web linking
 
 =cut

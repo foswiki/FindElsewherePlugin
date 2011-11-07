@@ -26,11 +26,11 @@ sub initPlugin {
     return 0 if $disabled;
 
     require Foswiki::Plugins::FindElsewherePlugin::Core;
-    Foswiki::Plugins::FindElsewherePlugin::Core::initPlugin();
+    Foswiki::Plugins::FindElsewherePlugin::Core::initPlugin(@_);
 
     # Alias the handler to the one in the core package
-    *Foswiki::Plugins::FindElsewherePlugin::startRenderingHandler =
-      \&Foswiki::Plugins::FindElsewherePlugin::Core::startRenderingHandler;
+    *Foswiki::Plugins::FindElsewherePlugin::preRenderingHandler =
+      \&Foswiki::Plugins::FindElsewherePlugin::Core::preRenderingHandler;
 
     return 1;
 }

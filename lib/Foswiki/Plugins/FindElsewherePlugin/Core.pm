@@ -16,6 +16,7 @@ BEGIN {
 # Set to 1 to get debug messages written to the warnings log
 use constant TRACE => 0;
 
+my $thisWeb;
 my $findAcronyms;
 my $disablePluralToSingular;
 my $redirectable;
@@ -25,6 +26,10 @@ my $singleMixedAlphaNumRegex;
 my $EMESC = "\1";
 
 sub initPlugin {
+
+    # initPlugin($topic, $web, $user) -> $boolean
+
+    $thisWeb = $_[1];
 
     my $otherWebs = Foswiki::Func::getPreferencesValue("LOOKELSEWHEREWEBS");
     unless ( defined($otherWebs) ) {
@@ -70,7 +75,7 @@ sub initPlugin {
 
 }
 
-sub startRenderingHandler {
+sub preRenderingHandler {
 
     unless ( scalar(@webList) ) {
 
@@ -102,7 +107,7 @@ sub startRenderingHandler {
                        (?:$Foswiki::regex{webNameRegex}\.)?
                        (?:$Foswiki::regex{wikiWordRegex}
                        | $Foswiki::regex{abbrevRegex}))/
-                         _findTopicElsewhere($_[1], $1, \%linkedWords)/gexo
+                         _findTopicElsewhere($thisWeb, $1, \%linkedWords)/gexo
     );
 
     $text =~ s/${EMESC}<nop>//go;
