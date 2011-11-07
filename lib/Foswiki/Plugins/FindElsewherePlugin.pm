@@ -7,23 +7,27 @@ use strict;
 use warnings;
 
 our $NO_PREFS_IN_TOPIC = 1;
-our $VERSION = '$Rev: 1952 $';
-our $RELEASE = '2.1';
-our $SHORTDESCRIPTION = "Automatically link to another web(s) if a topic isn't found in the current web.";
+our $VERSION           = '$Rev: 1952 $';
+our $RELEASE           = '2.2';
+our $SHORTDESCRIPTION =
+"Automatically link to another web(s) if a topic isn't found in the current web.";
 
 sub initPlugin {
+
     #my( $topic, $web, $user, $installWeb ) = @_;
 
-    my $disabled = Foswiki::Func::getPreferencesFlag( "DISABLELOOKELSEWHERE" );
-    unless( defined( $disabled )) {
+    my $disabled = Foswiki::Func::getPreferencesFlag("DISABLELOOKELSEWHERE");
+    unless ( defined($disabled) ) {
+
         # Compatibility, deprecated
-        $disabled = Foswiki::Func::getPluginPreferencesFlag(
-            "DISABLELOOKELSEWHERE" );
+        $disabled =
+          Foswiki::Func::getPluginPreferencesFlag("DISABLELOOKELSEWHERE");
     }
     return 0 if $disabled;
 
     require Foswiki::Plugins::FindElsewherePlugin::Core;
     Foswiki::Plugins::FindElsewherePlugin::Core::initPlugin();
+
     # Alias the handler to the one in the core package
     *Foswiki::Plugins::FindElsewherePlugin::startRenderingHandler =
       \&Foswiki::Plugins::FindElsewherePlugin::Core::startRenderingHandler;

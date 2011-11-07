@@ -117,6 +117,7 @@ Enabled for demo and testing - try it on and off
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
 |  Version: | %$VERSION% |
+|  10 Nov 2011: | (v2.2) Foswiki:Main.GeorgeClark - Foswikitask:Item10460 - expand macros in web list, Foswikitask:Item11199 - Don't autolink wikiwords that are part of an email address. Added unit tests and addressed possible reusability issues under fastcgi or mod_perl |
 |  10 Jun 2010: | (v2.1) Foswiki:Main.CrawfordCurrie - major tidy-up, including removal of NOAUTOLINK no-op |
 |  25 Mar 2009: | (v2.0.1) Foswiki:Main.KennethLavrsen - fixed so it does not remove square bracket links to non-existing topics. Example in plugin topic fixed |
 |  16 Dec 2008: | (v2.0.0) Foswiki:Main.KennethLavrsen - rebranded to Foswiki |

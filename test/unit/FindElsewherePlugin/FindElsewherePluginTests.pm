@@ -52,8 +52,10 @@ sub set_up {
 
     $Foswiki::cfg{LocalSitePreferences} = "$this->{users_web}.SitePreferences";
 
-    Foswiki::Func::saveTopic( $this->{users_web}, 'ProjectContributor', undef, "Some text" );
-    Foswiki::Func::saveTopic( $this->{users_web}, 'SomeMissingTopic', undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{users_web}, 'ProjectContributor', undef,
+        "Some text" );
+    Foswiki::Func::saveTopic( $this->{users_web}, 'SomeMissingTopic', undef,
+        "Some text" );
 }
 
 sub doTest {
@@ -91,12 +93,10 @@ sub doTest {
 sub test_PluralToSingularMultipleWeb {
     my $this = shift;
 
-
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
-    Foswiki::Func::setPreferencesValue(
-        'DISABLEPLURALTOSINGULAR', '0' );
-    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'DISABLEPLURALTOSINGULAR', '0' );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK',              '0' );
 
     $source = <<END_SOURCE;
 Test ProjectContributors Word
@@ -108,8 +108,7 @@ END_EXPECTED
 
     $this->doTest( $source, $expected, 0 );
 
-    Foswiki::Func::setPreferencesValue(
-        'DISABLEPLURALTOSINGULAR', '1' );
+    Foswiki::Func::setPreferencesValue( 'DISABLEPLURALTOSINGULAR', '1' );
 
     $this->doTest( $source, $expected, 1 );
 }
@@ -123,12 +122,10 @@ END_EXPECTED
 sub test_SpacedWikiWord {
     my $this = shift;
 
-
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
-    Foswiki::Func::setPreferencesValue(
-        'DISABLEPLURALTOSINGULAR', '0' );
-    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'DISABLEPLURALTOSINGULAR', '0' );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK',              '0' );
 
     $source = <<END_SOURCE;
 Test [[Installation Guide]] Word
@@ -154,8 +151,8 @@ END_EXPECTED
 sub test_SpacedMultiwebTopic {
     my $this = shift;
 
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        "$this->{users_web}, System" );
     Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
 
     $source = <<END_SOURCE;
@@ -182,8 +179,8 @@ END_EXPECTED
 sub test_MultiWebTopic {
     my $this = shift;
 
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        "$this->{users_web}, System" );
     Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
 
     $source = <<END_SOURCE;
@@ -211,9 +208,9 @@ END_EXPECTED
 sub test_LookElsewhereForLocal {
     my $this = shift;
 
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
-    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK',            '0' );
     Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREFORLOCAL', '1' );
 
     $source = <<"END_SOURCE";
@@ -247,8 +244,8 @@ END_EXPECTED
 sub test_MultiWebTopicMacros {
     my $this = shift;
 
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', '%USERSWEB%, %SYSTEMWEB%' );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        '%USERSWEB%, %SYSTEMWEB%' );
     Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
 
     $source = <<END_SOURCE;
@@ -275,8 +272,8 @@ END_EXPECTED
 sub test_WikiWordAsEmailAddress {
     my $this = shift;
 
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', '%USERSWEB%, %SYSTEMWEB%' );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        '%USERSWEB%, %SYSTEMWEB%' );
     Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
 
     $source = <<'END_SOURCE';
@@ -303,8 +300,8 @@ END_EXPECTED
 sub test_LookElsewhereForAcronyms {
     my $this = shift;
 
-    Foswiki::Func::setPreferencesValue(
-        'LOOKELSEWHEREWEBS', '%USERSWEB%, %SYSTEMWEB%' );
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        '%USERSWEB%, %SYSTEMWEB%' );
     Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
 
     $source = <<END_SOURCE;
@@ -340,8 +337,6 @@ END_EXPECTED
     $this->doTest( $source, $expected, 0 );
 
 }
-
-
 
 # ####################
 # Utility Functions ##
