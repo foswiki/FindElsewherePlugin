@@ -81,6 +81,97 @@ sub doTest {
 
 =pod
 
+---++ Plurals to Singular
+
+=cut
+
+# ########################################################
+# Verify that a topic is properly found as a plural
+# ########################################################
+sub test_PluralToSingularMultipleWeb {
+    my $this = shift;
+
+
+    Foswiki::Func::setPreferencesValue(
+        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue(
+        'DISABLEPLURALTOSINGULAR', '0' );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+
+    $source = <<END_SOURCE;
+Test ProjectContributors Word
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+Test <nop/>ProjectContributors<sup>([[$this->{users_web}.ProjectContributors][$this->{users_web}]],[[System.ProjectContributors][System]])</sup> Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+    Foswiki::Func::setPreferencesValue(
+        'DISABLEPLURALTOSINGULAR', '1' );
+
+    $this->doTest( $source, $expected, 1 );
+}
+
+=pod
+
+---++ Spaced wikiWord
+
+=cut
+
+sub test_SpacedWikiWord {
+    my $this = shift;
+
+
+    Foswiki::Func::setPreferencesValue(
+        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue(
+        'DISABLEPLURALTOSINGULAR', '0' );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+
+    $source = <<END_SOURCE;
+Test [[Installation Guide]] Word
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+Test [[System.InstallationGuide][Installation Guide]] Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+}
+
+=pod
+
+---++ Multiple web linking
+
+=cut
+
+# ########################################################
+# Verify that a topic is properly found in multiple webs
+# ########################################################
+sub test_SpacedMultiwebTopic {
+    my $this = shift;
+
+    Foswiki::Func::setPreferencesValue(
+        'LOOKELSEWHEREWEBS', "$this->{users_web}, System" );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+
+    $source = <<END_SOURCE;
+Test [[Project Contributor]] Word
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+Test <em>Project Contributor</em><sup>([[$this->{users_web}.ProjectContributor][$this->{users_web}]],[[System.ProjectContributor][System]])</sup> Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+}
+
+=pod
+
 ---++ Multiple web linking
 
 =cut
