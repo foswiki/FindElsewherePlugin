@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 our $NO_PREFS_IN_TOPIC = 1;
-our $VERSION           = '$Rev: 1952 $';
+our $VERSION           = '$Rev: 13016 $';
 our $RELEASE           = '2.2';
 our $SHORTDESCRIPTION =
 "Automatically link to another web(s) if a topic isn't found in the current web.";
