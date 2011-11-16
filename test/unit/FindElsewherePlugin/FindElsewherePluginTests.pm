@@ -69,7 +69,7 @@ sub doTest {
     $source = Foswiki::Func::expandCommonVariables($source);
     Foswiki::Plugins::FindElsewherePlugin::initPlugin( "TestTopic",
         $this->{test_web}, "MyUser", "System" );
-    Foswiki::Plugins::FindElsewherePlugin::startRenderingHandler( $source,
+    Foswiki::Plugins::FindElsewherePlugin::preRenderingHandler( $source,
         $this->{test_web} );
 
     #print " RENDERED = $source \n";
