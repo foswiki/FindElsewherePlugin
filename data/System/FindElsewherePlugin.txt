@@ -120,7 +120,7 @@ this will link
    * [[6to4.enro.net]] to 6to4enronet
 </verbatim>
 
-_Alternativly_ you can disable Hierarchical webs and add the forward Slash to the ={NameFilter}=
+_Alternativly_ you can disable Hierarchical webs and add the forward Slash to the ={NameFilter}= in =configure=
 
 <verbatim>
 $Foswiki::cfg{EnableHierarchicalWebs} = 0;
