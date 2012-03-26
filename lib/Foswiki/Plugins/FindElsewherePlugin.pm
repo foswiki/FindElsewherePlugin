@@ -8,7 +8,7 @@ use warnings;
 
 our $NO_PREFS_IN_TOPIC = 1;
 our $VERSION           = '$Rev$';
-our $RELEASE           = '2.2';
+our $RELEASE           = '2.3';
 our $SHORTDESCRIPTION =
 "Automatically link to another web(s) if a topic isn't found in the current web.";
 
@@ -34,6 +34,7 @@ sub initPlugin {
 
     return 1;
 }
+
 
 1;
 __END__

@@ -368,6 +368,88 @@ END_EXPECTED
 
 }
 
+=pod
+
+---++ Pre nested web linking 
+
+twiki used to remove /'s without replacement, and 
+
+=cut
+
+sub test_PreNestedWebsLinking {
+    my $this = shift;
+    
+    Foswiki::Func::saveTopic( $this->{test_web}, '6to4enronet', undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'Aou1aplpnet', undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'MemberFinance', undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'MyNNABugsfeatureRequests', undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'Transfermergerrestructure', undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'ArthsChecklist', undef, "Some text" );
+
+
+#turned off.
+$Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 0;
+
+    $source = <<END_SOURCE;
+SiteChanges
+[[6to4.nro.net]]
+[[Member/Finance]]
+[[MyNNA bugs/feature requests]]
+[[Transfer/merger/restructure]]
+[[Arth's checklist]]
+[[WebHome]]
+[[WebPreferences]]
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+[[System.SiteChanges][SiteChanges]]
+[[6to4.nro.net]]
+[[Member/Finance]]
+[[MyNNA bugs/feature requests]]
+[[Transfer/merger/restructure]]
+[[Arth's checklist]]
+[[System.WebHome][WebHome]]
+[[WebPreferences]]
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+#turned on.
+$Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 1;
+    my $query = Unit::Request->new('');
+    $query->path_info("/$this->{test_web}/$this->{test_topic}");
+    $this->createNewFoswikiSession( undef, $query );
+
+    $source = <<END_SOURCE;
+SiteChanges
+[[6to4.enro.net]]
+[[aou1.aplp.net]]
+[[Member/Finance]]
+[[MyNNA bugs/feature requests]]
+[[Transfer/merger/restructure]]
+[[Arth's checklist]]
+[[WebHome]]
+[[WebPreferences]]
+[[does.not.exist]]
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+[[System.SiteChanges][SiteChanges]]
+[[6to4enronet][6to4.enro.net]]
+[[Aou1aplpnet][aou1.aplp.net]]
+[[MemberFinance][Member/Finance]]
+[[MyNNABugsfeatureRequests][MyNNA bugs/feature requests]]
+[[Transfermergerrestructure][Transfer/merger/restructure]]
+[[ArthsChecklist][Arth's checklist]]
+[[System.WebHome][WebHome]]
+[[WebPreferences]]
+[[does.not.exist]]
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+}
+
 # ####################
 # Utility Functions ##
 # ####################

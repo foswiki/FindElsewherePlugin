@@ -76,12 +76,16 @@ sub initPlugin {
 }
 
 sub preRenderingHandler {
+    if (exists($Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) && $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) {
+        #very old, pre-nested webs linking rules.
+    } else {
+        unless ( scalar(@webList) ) {
 
-    unless ( scalar(@webList) ) {
-
-        # no point if there are no webs to search
-        return;
+            # no point if there are no webs to search
+            return;
+        }
     }
+
 
     # Find instances of WikiWords not in this web, but in the otherWeb(s)
     # If the WikiWord is found in theWeb, put the word back unchanged
@@ -294,6 +298,28 @@ sub _findTopicElsewhere {
             return $renderedLink;
         }
     }
+    
+    if (exists($Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) && $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) {    
+        #pre-nested webs TWiki treated non-wikiwords more liberally
+        #print STDERR "===( $web, $topic )\n";
+        #replace space letter with uc(letter)
+        #$topic =~ s/\s(\w)/uc($1)/ge;
+        #remove all other non-wikiword links
+        $topic =~ s/[^$Foswiki::regex{mixedAlphaNum}]//g;
+        #test for existance
+        #print STDERR "------ exists($web, $topic)\n";
+
+         if ( Foswiki::Func::topicExists( $web, $topic ) ) {
+            # Topic found in one place
+            # If link text [[was in this form]], free it
+            $linkText =~ s/\[\[(.*)\]\]/$1/o;
+
+            #print STDERR "------==== >> [[$topic][$linkText]]\n";
+            return "[[$topic][$linkText]]";
+         }
+    }
+
+    
     return $original;
 }
 
