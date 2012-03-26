@@ -107,7 +107,7 @@ Enabled for demo and testing - try it on and off
 	* You can avoid single words being looked up by using =!DontLookup= or =&lt;nop/&gt;DontLookup= syntax
 	* "Groups of webs" can use each other as lookup webs, by setting the =LOOKELSEWHEREWEBS= preference accordingly in their !WebPreferences
 
----++ Pre Dakar TWiki linking.
+---++ Pre Dakar TWiki linking
 Before Hierarchical or Nested webs were added to TWiki in 2005, topic linking rules were a little more relaxed. 
 If you are upgrading with content that is this old, you may find some =[<nop>[square backet]]= links don't work any more.
 
@@ -118,6 +118,13 @@ this will link
    * [[Arth's Checklist]] to ArthsChecklist
    * [[MyNNA bugs/feature requests]] to MyNNABugsfeatureRequests
    * [[6to4.enro.net]] to 6to4enronet
+</verbatim>
+
+_Alternativly_ you can disable Hierarchical webs and add the forward Slash to the ={NameFilter}=
+
+<verbatim>
+$Foswiki::cfg{EnableHierarchicalWebs} = 0;
+$Foswiki::cfg{NameFilter} = $Foswiki::cfg{NameFilter} = '[\/\\s\\*?~^\\$@%`"\'&;|<>\\[\\]#\\x00-\\x1f]';
 </verbatim>
 ---++ Installation Instructions
 %$INSTALL_INSTRUCTIONS%

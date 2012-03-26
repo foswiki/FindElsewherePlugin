@@ -413,7 +413,7 @@ END_SOURCE
 END_EXPECTED
 
     $this->doTest( $source, $expected, 0 );
-
+    
 #turned on.
 $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 1;
     my $query = Unit::Request->new('');
@@ -447,6 +447,57 @@ END_SOURCE
 END_EXPECTED
 
     $this->doTest( $source, $expected, 0 );
+
+#DO it without find elsewhere..
+#turned off.
+#turn off nested webs and add / into NameFilter
+$Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 0;
+$Foswiki::cfg{EnableHierarchicalWebs} = 0;
+$Foswiki::cfg{NameFilter} = $Foswiki::cfg{NameFilter} = '[\/\\s\\*?~^\\$@%`"\'&;|<>\\[\\]#\\x00-\\x1f]';
+    $query = Unit::Request->new('');
+    $query->path_info("/$this->{test_web}/$this->{test_topic}");
+    $this->createNewFoswikiSession( undef, $query );
+
+    $source = <<END_SOURCE;
+SiteChanges
+[[6to4.enro.net]]
+[[aou1.aplp.net]]
+[[Member/Finance]]
+[[MyNNA bugs/feature requests]]
+[[Transfer/merger/restructure]]
+[[Arth's checklist]]
+[[WebHome]]
+[[WebPreferences]]
+[[does.not.exist]]
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+[[System.SiteChanges][SiteChanges]]
+[[6to4enronet][6to4.enro.net]]
+[[Aou1aplpnet][aou1.aplp.net]]
+[[MemberFinance][Member/Finance]]
+[[MyNNABugsfeatureRequests][MyNNA bugs/feature requests]]
+[[Transfermergerrestructure][Transfer/merger/restructure]]
+[[ArthsChecklist][Arth's checklist]]
+[[System.WebHome][WebHome]]
+[[WebPreferences]]
+[[does.not.exist]]
+END_EXPECTED
+
+    _trimSpaces($source);
+    _trimSpaces($expected);
+
+    #print " SOURCE   = $source\n EXPECTED = $expected \n";
+
+    $source = Foswiki::Func::expandCommonVariables($source);
+#    Foswiki::Plugins::FindElsewherePlugin::initPlugin( "TestTopic",
+#        $this->{test_web}, "MyUser", "System" );
+#    Foswiki::Plugins::FindElsewherePlugin::preRenderingHandler( $source,
+#        $this->{test_web} );
+    $source = Foswiki::Func::expandCommonVariables($source);
+    $source = Foswiki::Func::renderText($source, $this->{test_web}, "TestTopic");
+    #print " RENDERED = $source \n";
+    $this->assert_str_not_equals( $expected, $source );
 
 }
 
