@@ -431,7 +431,7 @@ Copyright (C) 2002 Mike Barton, Marco Carnut, Peter HErnst
 Copyright (C) 2003 Martin Cleaver
 Copyright (C) 2004 Matt Wilkie
 Copyright (C) 2007 Crawford Currie http://c-dot.co.uk
-Copyright (C) 2008-2010 Foswiki Contributors
+Copyright (C) 2008-2012 Foswiki Contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
