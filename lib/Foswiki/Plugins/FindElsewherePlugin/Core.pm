@@ -22,6 +22,7 @@ my $disablePluralToSingular;
 my $redirectable;
 my @webList;
 my $singleMixedAlphaNumRegex;
+my $otherWebs;
 
 my $EMESC = "\1";
 
@@ -31,7 +32,7 @@ sub initPlugin {
 
     $thisWeb = $_[1];
 
-    my $otherWebs = Foswiki::Func::getPreferencesValue("LOOKELSEWHEREWEBS");
+    $otherWebs = Foswiki::Func::getPreferencesValue("LOOKELSEWHEREWEBS");
     unless ( defined($otherWebs) ) {
 
         # Compatibility, deprecated
@@ -47,11 +48,9 @@ sub initPlugin {
         $otherWebs = "$Foswiki::cfg{SystemWebName},$Foswiki::cfg{UsersWebName}";
     }
 
-
-    # Item10460: Expand some variables like %USERSWEB%
-    # WARNING: calling expandCommonVariables inside initPlugin is a bad thing to do 
-    # as the engine isn't fully initialized at that point
-    #$otherWebs = Foswiki::Func::expandCommonVariables($otherWebs);
+ # Item10460: Expand some variables like %USERSWEB%
+ # WARNING: calling expandCommonVariables inside initPlugin is a bad thing to do
+ # as the engine isn't fully initialized at that point
     $otherWebs =~ s/\%USERSWEB%/$Foswiki::cfg{UsersWebName}/g;
     $otherWebs =~ s/\%SYSTEMWEB%/$Foswiki::cfg{SystemWebName}/g;
     $otherWebs =~ s/\%SANDBOXWEB%/$Foswiki::cfg{SandboxWebName}/g;
@@ -70,28 +69,38 @@ sub initPlugin {
 
     $redirectable = Foswiki::Func::getPreferencesFlag("LOOKELSEWHEREFORLOCAL");
 
+    $singleMixedAlphaNumRegex = qr/[$Foswiki::regex{mixedAlphaNum}]/;
+
+}
+
+sub preRenderingHandler {
+
     @webList = ();
+
+    # Might still be unexpanded macros - expand if necessary
+    if ( $otherWebs =~ m/%/ ) {
+        $otherWebs = Foswiki::Func::expandCommonVariables($otherWebs);
+    }
+
     foreach my $otherWeb ( split( /[,\s]+/, $otherWebs ) ) {
         $otherWeb = Foswiki::Sandbox::untaint( $otherWeb,
             \&Foswiki::Sandbox::validateWebName );
         push( @webList, $otherWeb ) if $otherWeb;
     }
 
-    $singleMixedAlphaNumRegex = qr/[$Foswiki::regex{mixedAlphaNum}]/;
+    if ( exists( $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} )
+        && $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} )
+    {
 
-}
-
-sub preRenderingHandler {
-    if (exists($Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) && $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) {
         #very old, pre-nested webs linking rules.
-    } else {
+    }
+    else {
         unless ( scalar(@webList) ) {
 
             # no point if there are no webs to search
             return;
         }
     }
-
 
     # Find instances of WikiWords not in this web, but in the otherWeb(s)
     # If the WikiWord is found in theWeb, put the word back unchanged
@@ -304,28 +313,32 @@ sub _findTopicElsewhere {
             return $renderedLink;
         }
     }
-    
-    if (exists($Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) && $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking}) {    
+
+    if ( exists( $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} )
+        && $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} )
+    {
+
         #pre-nested webs TWiki treated non-wikiwords more liberally
         #print STDERR "===( $web, $topic )\n";
         #replace space letter with uc(letter)
         #$topic =~ s/\s(\w)/uc($1)/ge;
         #remove all other non-wikiword links
         $topic =~ s/[^$Foswiki::regex{mixedAlphaNum}]//g;
+
         #test for existance
         #print STDERR "------ exists($web, $topic)\n";
 
-         if ( Foswiki::Func::topicExists( $web, $topic ) ) {
+        if ( Foswiki::Func::topicExists( $web, $topic ) ) {
+
             # Topic found in one place
             # If link text [[was in this form]], free it
             $linkText =~ s/\[\[(.*)\]\]/$1/o;
 
             #print STDERR "------==== >> [[$topic][$linkText]]\n";
             return "[[$topic][$linkText]]";
-         }
+        }
     }
 
-    
     return $original;
 }
 

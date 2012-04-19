@@ -292,6 +292,36 @@ END_EXPECTED
 
 =pod
 
+---++ Multiple web linking with non-std. macro webname
+
+=cut
+
+# ########################################################
+# Verify that a topic is properly found in multiple webs
+# Item10460: Webs identified by macro - %USERSWEB% and %SYSTEMWEB%
+# ########################################################
+sub test_MultiWebTopicLocalMacros {
+    my $this = shift;
+
+    Foswiki::Func::setPreferencesValue( 'MYWEB', "$this->{users_web}");
+    Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
+        '%MYWEB%, %SYSTEMWEB%' );
+    Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
+
+    $source = <<END_SOURCE;
+Test ProjectContributor Word
+END_SOURCE
+
+    $expected = <<"END_EXPECTED";
+Test <nop/>ProjectContributor<sup>([[$this->{users_web}.ProjectContributor][$this->{users_web}]],[[System.ProjectContributor][System]])</sup> Word
+END_EXPECTED
+
+    $this->doTest( $source, $expected, 0 );
+
+}
+
+=pod
+
 ---++ Email address with WikiWord on left
 
 =cut
