@@ -47,8 +47,14 @@ sub initPlugin {
         $otherWebs = "$Foswiki::cfg{SystemWebName},$Foswiki::cfg{UsersWebName}";
     }
 
-    # Item10460: Expand variables like %USERSWEB%
-    $otherWebs = Foswiki::Func::expandCommonVariables($otherWebs);
+
+    # Item10460: Expand some variables like %USERSWEB%
+    # WARNING: calling expandCommonVariables inside initPlugin is a bad thing to do 
+    # as the engine isn't fully initialized at that point
+    #$otherWebs = Foswiki::Func::expandCommonVariables($otherWebs);
+    $otherWebs =~ s/\%USERSWEB%/$Foswiki::cfg{UsersWebName}/g;
+    $otherWebs =~ s/\%SYSTEMWEB%/$Foswiki::cfg{SystemWebName}/g;
+    $otherWebs =~ s/\%SANDBOXWEB%/$Foswiki::cfg{SandboxWebName}/g;
 
     $findAcronyms =
       Foswiki::Func::getPreferencesValue("LOOKELSEWHEREFORACRONYMS") || "all";
