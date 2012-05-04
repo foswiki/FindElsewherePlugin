@@ -35,7 +35,6 @@ sub initPlugin {
     return 1;
 }
 
-
 1;
 __END__
 Copyright (C) 2002 Mike Barton, Marco Carnut, Peter HErnst

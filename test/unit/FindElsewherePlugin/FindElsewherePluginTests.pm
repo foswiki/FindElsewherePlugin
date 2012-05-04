@@ -303,7 +303,7 @@ END_EXPECTED
 sub test_MultiWebTopicLocalMacros {
     my $this = shift;
 
-    Foswiki::Func::setPreferencesValue( 'MYWEB', "$this->{users_web}");
+    Foswiki::Func::setPreferencesValue( 'MYWEB', "$this->{users_web}" );
     Foswiki::Func::setPreferencesValue( 'LOOKELSEWHEREWEBS',
         '%MYWEB%, %SYSTEMWEB%' );
     Foswiki::Func::setPreferencesValue( 'NOAUTOLINK', '0' );
@@ -408,17 +408,22 @@ twiki used to remove /'s without replacement, and
 
 sub test_PreNestedWebsLinking {
     my $this = shift;
-    
-    Foswiki::Func::saveTopic( $this->{test_web}, '6to4enronet', undef, "Some text" );
-    Foswiki::Func::saveTopic( $this->{test_web}, 'Aou1aplpnet', undef, "Some text" );
-    Foswiki::Func::saveTopic( $this->{test_web}, 'MemberFinance', undef, "Some text" );
-    Foswiki::Func::saveTopic( $this->{test_web}, 'MyNNABugsfeatureRequests', undef, "Some text" );
-    Foswiki::Func::saveTopic( $this->{test_web}, 'Transfermergerrestructure', undef, "Some text" );
-    Foswiki::Func::saveTopic( $this->{test_web}, 'ArthsChecklist', undef, "Some text" );
 
+    Foswiki::Func::saveTopic( $this->{test_web}, '6to4enronet', undef,
+        "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'Aou1aplpnet', undef,
+        "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'MemberFinance', undef,
+        "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'MyNNABugsfeatureRequests',
+        undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'Transfermergerrestructure',
+        undef, "Some text" );
+    Foswiki::Func::saveTopic( $this->{test_web}, 'ArthsChecklist', undef,
+        "Some text" );
 
-#turned off.
-$Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 0;
+    #turned off.
+    $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 0;
 
     $source = <<END_SOURCE;
 SiteChanges
@@ -443,9 +448,9 @@ END_SOURCE
 END_EXPECTED
 
     $this->doTest( $source, $expected, 0 );
-    
-#turned on.
-$Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 1;
+
+    #turned on.
+    $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 1;
     my $query = Unit::Request->new('');
     $query->path_info("/$this->{test_web}/$this->{test_topic}");
     $this->createNewFoswikiSession( undef, $query );
@@ -478,12 +483,13 @@ END_EXPECTED
 
     $this->doTest( $source, $expected, 0 );
 
-#DO it without find elsewhere..
-#turned off.
-#turn off nested webs and add / into NameFilter
-$Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 0;
-$Foswiki::cfg{EnableHierarchicalWebs} = 0;
-$Foswiki::cfg{NameFilter} = $Foswiki::cfg{NameFilter} = '[\/\\s\\*?~^\\$@%`"\'&;|<>\\[\\]#\\x00-\\x1f]';
+    #DO it without find elsewhere..
+    #turned off.
+    #turn off nested webs and add / into NameFilter
+    $Foswiki::cfg{FindElsewherePlugin}{CairoLegacyLinking} = 0;
+    $Foswiki::cfg{EnableHierarchicalWebs} = 0;
+    $Foswiki::cfg{NameFilter} = $Foswiki::cfg{NameFilter} =
+      '[\/\\s\\*?~^\\$@%`"\'&;|<>\\[\\]#\\x00-\\x1f]';
     $query = Unit::Request->new('');
     $query->path_info("/$this->{test_web}/$this->{test_topic}");
     $this->createNewFoswikiSession( undef, $query );
@@ -520,12 +526,15 @@ END_EXPECTED
     #print " SOURCE   = $source\n EXPECTED = $expected \n";
 
     $source = Foswiki::Func::expandCommonVariables($source);
-#    Foswiki::Plugins::FindElsewherePlugin::initPlugin( "TestTopic",
-#        $this->{test_web}, "MyUser", "System" );
-#    Foswiki::Plugins::FindElsewherePlugin::preRenderingHandler( $source,
-#        $this->{test_web} );
+
+    #    Foswiki::Plugins::FindElsewherePlugin::initPlugin( "TestTopic",
+    #        $this->{test_web}, "MyUser", "System" );
+    #    Foswiki::Plugins::FindElsewherePlugin::preRenderingHandler( $source,
+    #        $this->{test_web} );
     $source = Foswiki::Func::expandCommonVariables($source);
-    $source = Foswiki::Func::renderText($source, $this->{test_web}, "TestTopic");
+    $source =
+      Foswiki::Func::renderText( $source, $this->{test_web}, "TestTopic" );
+
     #print " RENDERED = $source \n";
     $this->assert_str_not_equals( $expected, $source );
 
