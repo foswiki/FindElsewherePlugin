@@ -23,6 +23,7 @@ my $redirectable;
 my @webList;
 my $singleMixedAlphaNumRegex;
 my $otherWebs;
+my $noAutolink;
 
 my $EMESC = "\1";
 
@@ -31,7 +32,7 @@ sub initPlugin {
     # initPlugin($topic, $web, $user) -> $boolean
 
     $thisWeb = $_[1];
-
+    
     $otherWebs = Foswiki::Func::getPreferencesValue("LOOKELSEWHEREWEBS");
     unless ( defined($otherWebs) ) {
 
@@ -70,6 +71,8 @@ sub initPlugin {
     $redirectable = Foswiki::Func::getPreferencesFlag("LOOKELSEWHEREFORLOCAL");
 
     $singleMixedAlphaNumRegex = qr/[$Foswiki::regex{mixedAlphaNum}]/;
+    
+    $noAutolink = Foswiki::Func::getPreferencesFlag('NOAUTOLINK');
 
 }
 
@@ -80,6 +83,10 @@ sub preRenderingHandler {
     # Might still be unexpanded macros - expand if necessary
     if ( $otherWebs =~ m/%/ ) {
         $otherWebs = Foswiki::Func::expandCommonVariables($otherWebs);
+    }
+
+    if ( $noAutolink ) {
+        return;
     }
 
     foreach my $otherWeb ( split( /[,\s]+/, $otherWebs ) ) {
